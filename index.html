@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=mail" />
+	<title>Pierce Seigne</title>
+</head>
+
+
+<body style="background-color: blanchedalmond;">
+
+	<style>
+		.headshot {
+			max-width: 30%;
+			height: auto;
+			border-radius: 10%;
+			transition: box-shadow 0.5s ease-out;
+		}
+
+		.headshot:hover {
+			box-shadow:
+				-5px 5px 10px #00f,
+				5px 5px 10px #f00,
+				0 -5px 10px #0f0;
+			transition: 0.3s;
+		}
+
+		.body {
+
+			font-family: 'Roboto', sans-serif;
+			text-align: center;
+			font-size: 0.9rem;
+			padding: 25px;
+		}
+
+		.container {
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			padding: 10px;
+		}
+
+		.contacts {
+			margin-top: 1rem;
+		}
+
+		.ul_noBullets {
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+			font-family: 'Roboto', sans-serif;
+			
+		}
+
+		.bold {
+			font-weight: bold;
+		}
+
+		.socials {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 20px;
+			/* space between icons */
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		.contactIcon {
+			font-size: 28px;
+			width: 50px;
+			height: 50px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-radius: 50%;
+			background-color: black;
+			color: white;
+			transition: box-shadow 0.5s ease-out;
+		}
+
+		.circle {
+			width: 100px;
+			/* Set your desired width */
+			height: 100px;
+			/* Set your desired height (must be equal to width) */
+			background-color: blue;
+			/* Set your desired background color */
+			border-radius: 50%;
+		}
+
+		.contactIcon:hover {
+			background-color: white;
+			color: black;
+			transition: 0.3s;
+			/* transform: scale(1.); */
+			box-shadow:
+				-5px 5px 10px #00f,
+				5px 5px 10px #f00,
+				0 -5px 10px #0f0;
+
+
+		}
+
+
+		.links {
+			font-family: 'Roboto', sans-serif;
+			position: relative;
+			list-style: none;
+			padding: 30px 30px;
+			line-height: 50px;
+			text-align: center;
+			font-size: x-large;
+			font-weight: bold;
+			transition: transform 0.5s ease-out;
+			
+
+		}
+
+		.links:hover {
+			transition: 0.3s;
+			transform: scale(1.5);
+			color: red;
+			
+		}
+
+	</style>
+
+	<div class="container">
+		<div>
+			<h1 style="font-family: 'Roboto', sans-serif;">Pierce Seigne</h1>
+			<ul class="ul_noBullets">
+				<li>Economics B.S.</li>
+				<li>Certificates in Computer Science and History</li>
+				<li class="bold">University of Wisconsin-Madison</li>
+			</ul>
+
+			<!-- Contact -->
+			<div class="container contacts">
+				<div class="socials">
+					<!-- LinkedIn -->
+					<a href="https://www.linkedin.com/in/pierce-seigne-b310a0305" target="_blank">
+						<i class="fa-brands fa-linkedin-in contactIcon"></i>
+					</a>
+					<!-- Instagram -->
+					<a href="https://www.instagram.com/pierceseigne/" target="_blank">
+						<i class=" fa-brands fa-instagram contactIcon"></i>
+					</a>
+					<!-- Email -->
+					<a href="mailto:pierceseigne@icloud.com">
+						<i class="fa-regular fa-envelope contactIcon"></i>
+					</a>
+					<!-- Github -->
+					<a href="https://github.com/pseigne" target="_blank">
+						<i class="fa-brands fa-github contactIcon"></i>
+					</a>
+
+				</div>
+			</div>
+		</div>
+
+		<img src="images/Headshot cropped.png" alt="Headshot" class="headshot">
+
+	</div>
+
+
+	<!-- Links -->
+	<div class="container">
+
+		<!-- <ul class="links">
+			<li class=><a href="">Strava Project</a></li>
+		</ul> -->
+
+
+
+
+	</div>
+
+</body>
+
+</html>
