@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <title>Track Pace Calculator</title>
 </head>
 
@@ -13,11 +15,11 @@
         display: flex;
         align-items: center;
         flex-direction: column;
-        background-image: url(../images/track.jpg);
+        /* background-image: url(../images/track.jpg); */
 
     }
 
-    button {
+    .calculate {
         width: 6.5em;
         height: 2.3em;
         margin: 0.5em;
@@ -34,8 +36,8 @@
     }
 
     input {
-        height: 48px;
-        width: 280px;
+        /* height: 48px; */
+
         border: 1px solid #c0c0c0;
         border-radius: 4px;
         box-sizing: border-box;
@@ -44,13 +46,17 @@
 
     }
 
+    .target-time-input {
+        width: 100px;
+    }
+
     input:focus {
-        outline: none;
-        border: 2px solid blue;
+
         outline: none;
         border: 2px solid #4f94ff;
         /* bright blue border */
-        box-shadow: 0 0 10px transform: scale(1.02);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.206);
+        transform: scale(1.02);
         /* subtle zoom effect */
     }
 
@@ -66,8 +72,8 @@
         /* align items at the top */
         align-items: center;
         background-color: white;
-        width: 4in;
-        min-height: 4in;
+        /* width: 4in;
+        min-height: 4in; */
         /* start at original size */
         border-radius: 24px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
@@ -99,33 +105,170 @@
         box-shadow: 0 0 10px rgba(79, 148, 255, 0.5);
     }
 
+
+    #goal_input {
+        display: flex;
+        gap: 20px;
+    }
+
+    .target-time-input {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .target-time-input label {
+        display: flex;
+        justify-content: center;
+        font-weight: normal;
+        color: rgb(48, 48, 48);
+    }
+
+
     label {
         margin-top: 10px;
         margin-bottom: 10px;
         font-weight: bold;
     }
 
-    .output-box {
-        display:flex;
-        justify-content: center;
-        margin-top: 15px;
+    .event-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .event-buttons input {
+        display: none;
+    }
+
+    .event-buttons label {
+        padding: 0.5rem 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+
+    .event-buttons input:checked+span {
+
+        transition: all 0.3s ease;
+        color: red;
+    }
+
+
+
+    .event-buttons label:hover {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.219);
+        transition: all 0.3s ease;
+    }
+
+
+    /* ===== Table Styling ===== */
+
+    #result {
+        margin-top: 1.5rem;
+        border-collapse: collapse;
         width: 100%;
-        min-height: 3em;
-        padding: 10px;
-        border: 1px solid #c0c0c0;
+        max-width: 600px;
+        background-color: white;
         border-radius: 12px;
-        background-color: #f9f9f9;
-        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-        font-size: 14px;
+        overflow: hidden;
+        /* rounds corners */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        font-size: 15px;
+    }
+
+    /* Header */
+    #result thead {
+        background-color: #111;
+        color: white;
+    }
+
+    #result th {
+        padding: 12px 14px;
         text-align: left;
-        overflow-wrap: break-word;
-        white-space: pre-wrap;
-        /* preserve line breaks from your JS */
+        font-weight: 600;
+        letter-spacing: 0.03em;
+    }
+
+    /* Body rows */
+    #result tbody tr {
+        border-bottom: 1px solid #e6e6e6;
+        transition: background-color 0.2s ease;
+    }
+
+    #result tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    #result td {
+        padding: 12px 14px;
+    }
+
+
+    /* Hover effect */
+    #result tbody tr:hover {
+        background-color: #eef4ff;
+    }
+
+    /* Numeric alignment tweaks */
+    #result td:nth-child(1),
+    #result td:nth-child(2) {
+        font-weight: 600;
+    }
+
+    #result td:nth-child(4) {
+        font-family: monospace;
+        font-weight: 600;
+    }
+
+
+
+    #target-time-heading i {
+        margin-right: 0.5rem;
+        /* space between icon and text */
+        color: #111;
+        /* optional: match header color */
+        font-size: 1.2em;
+        /* adjust icon size */
+        vertical-align: bottom;
+        /* align with text baseline */
+    }
+
+    #distance-heading i {
+        margin-right: 10px;
+        /* space between icon and text */
+        color: #111;
+        /* optional: match header color */
+        font-size: 1.2em;
+        /* adjust icon size */
+        vertical-align: bottom;
+        /* align with text baseline */
+    }
+
+
+    h5 {
+        font-weight: normal;
+    }
+
+    .custom-distance-div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+    }
+
+    #custom-distance {
+        width: 100%;
     }
 </style>
 
 
 <script>
+
+
+
+
+
     // Convert elapsed time in seconds to "minutes:seconds" format
     function formatter(elapsed_time) {
         let minutes = Math.floor(elapsed_time / 60);
@@ -134,61 +277,190 @@
     }
 
     function calculateSplits() {
-        const goal_time = document.getElementById("goal_time").value;
-        const event = parseFloat(document.getElementById("event").value);
+        const goal_hours = document.getElementById("goal_hours").value;
+        const goal_minutes = document.getElementById("goal_minutes").value;
+        const goal_seconds = document.getElementById("goal_seconds").value;
+        // const lap_length = document.getElementById("lap_length").value;
 
-        // Parse input time "mm:ss"
-        const time = goal_time.split(":");
-        const minutes = parseInt(time[0]);
-        const seconds = parseFloat(time[1]);
+        const hours = parseInt(goal_hours) || 0;
+        const minutes = parseInt(goal_minutes) || 0;
+        const seconds = parseFloat(goal_seconds) || 0;
 
-        const total_seconds = minutes * 60 + seconds;
+        // Get custom distance (if provided)
+        const customDistanceInput = document.getElementById("custom-distance").value;
+        const customDistance = parseFloat(customDistanceInput);
+
+        // Get selected preset event
+        const selectedEvent = document.querySelector('input[name="event"]:checked');
+
+        let event;
+
+        // Priority: custom distance
+        if (!isNaN(customDistance) && customDistance > 0) {
+            event = customDistance;
+        }
+        // Fallback: radio button
+        else if (selectedEvent) {
+            event = parseFloat(selectedEvent.value);
+        }
+        // Neither provided
+        else {
+            alert("Please select an event or enter a custom distance");
+            return;
+        }
+
+
+
+
+        const total_seconds = (hours * 3600) + (minutes * 60) + seconds;
+
+        // Prevent division by zero
+        if (total_seconds === 0) return;
+
         const seconds_per_meter = total_seconds / event;
+
+
+        const goal_time =
+            hours > 0
+                ? `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+                : `${minutes}:${String(seconds).padStart(2, '0')}`;
 
         let meters_run = 0;
         let elapsed_time = 0;
-        let result_text = `Splits for ${event}m goal ${goal_time}:<br>`;
 
+        let result_table = `            
+        <thead>
+                <tr>
+                    <th>Lap</th>
+                    <th>Distance</th>
+                    <th>Split</th>
+                    <th>Cumalative</th>
+                </tr>
+            </thead>`;
+
+        let lap = 0;
         while (meters_run < event) {
+            lap++;
             const lap_distance = Math.min(400, event - meters_run);
             elapsed_time += lap_distance * seconds_per_meter;
             meters_run += lap_distance;
 
-            result_text += `${Math.round(meters_run)}m: ${formatter(elapsed_time)} (${lap_distance}m: ${(seconds_per_meter * lap_distance).toFixed(2)})<br>`;
+            result_table += `
+            <tbody>
+                <tr>
+                    <td>${lap}</td>
+                    <td>${meters_run}m</td>
+                    <td>${(lap_distance * seconds_per_meter).toFixed(2)}s (${Math.round(lap_distance)}m)</td>
+                    <td>${formatter(elapsed_time)}</td>
+                </tr>
+            </tbody>
+            `
+            // result_text += `${Math.round(meters_run)}m: ${formatter(elapsed_time)} (${lap_distance}m: ${(seconds_per_meter * lap_distance).toFixed(2)})<br>`;
         }
 
-        document.getElementById("result").innerHTML = result_text;
+        document.getElementById("result").innerHTML = result_table;
     }
-</script>
+
+    // source: Chat GPT, allowing it to update in real time
+    window.addEventListener('DOMContentLoaded', () => {
+        // Select all inputs AFTER the DOM has loaded
+        const inputs = document.querySelectorAll('#goal_input input, #custom-distance, input[name="event"]');
+
+        // Recalculate splits whenever any input changes
+        inputs.forEach(input => {
+            input.addEventListener('input', calculateSplits);
+        });
+        // Calculate Default Values 
+        calculateSplits();
+    });
 
 
 </script>
+
+
 
 <body>
 
 
     <div class="main-card">
-        <label for="goal_time">Goal Time:</label>
-        <input id="goal_time" type="text" placeholder="mm:ss">
+        <!-- <button class="settings">Settings</button> -->
+
+        <h3 id="target-time-heading">
+            <i class="fa-solid fa-stopwatch"></i>
+            Target Time:
+        </h3>
+        <div id="goal_input">
+
+            <div class="target-time-input">
+                <input id="goal_hours" type="number" min="0">
+                <label for="goal_hours">Hours</label>
+            </div>
+
+            <div class="target-time-input">
+                <input id="goal_minutes" type="number" min="0" max="59" value="13">
+                <label for="goal_minutes">Minutes</label>
+            </div>
+            <div class="target-time-input">
+                <input id="goal_seconds" type="number" min="0" max="59.99" value="59.99">
+                <label for="goal_seconds">Seconds</label>
+            </div>
+        </div>
 
 
-        <label for="event">Select Event</label>
-        <select class="event-selector" id="event">
-            <option value="800">800m</option>
-            <option value="1500">1500m</option>
-            <option value="1600">1600m</option>
-            <option value="1609">Mile</option>
-            <option value="3000">3000m</option>
-            <option value="5000">5,000m</option>
-            <option value="10000">10,000m</option>
-        </select>
 
 
-        <button onclick="calculateSplits()">Calculate</button>
-        <div id="result" class="output-box"></div>
+        <h3 id="distance-heading">
+            <i class="fa-solid fa-ruler"></i>
+            Race Distance:
+        </h3>
+
+
+
+        <div class="event-buttons">
+            <label>
+                <input type="radio" name="event" class="event-button" value="800">
+                <span>800m</span>
+            </label>
+
+            <label>
+                <input type="radio" name="event" class="event-button" value="1500">
+                <span>1500m</span>
+            </label>
+
+            <label>
+                <input type="radio" name="event" class="event-button" value="1609.34">
+                <span>Mile</span>
+            </label>
+
+            <label>
+                <input type="radio" name="event" class="event-button" value="3000">
+                <span>3,000m</span>
+            </label>
+
+            <label>
+                <input type="radio" name="event" class="event-button" value="5000" checked>
+                <span>5,000m</span>
+            </label>
+
+            <label>
+                <input type="radio" name="event" class="event-button" value="10000">
+                <span>10,000m</span>
+            </label>
+        </div>
+
+        <div class="custom-distance-div">
+            <h5>Custom Distance (meters):</h5>
+            <input id="custom-distance" type="number" min="1" step="1" placeholder="e.g. 1200">
+        </div>
 
     </div>
 
+
+
+    <table id="result">
+
+
+    </table>
 
 
 
