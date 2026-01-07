@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Pace Calculator</title>
+</head>
+
+<style>
+    body {
+        font-family: sans-serif;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        background-image: url(../images/track.jpg);
+
+    }
+
+    button {
+        width: 6.5em;
+        height: 2.3em;
+        margin: 0.5em;
+        background: black;
+        color: white;
+        border: none;
+        border-radius: 0.625em;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    input {
+        height: 48px;
+        width: 280px;
+        border: 1px solid #c0c0c0;
+        border-radius: 4px;
+        box-sizing: border-box;
+        padding: 16px;
+        transition: all 0.3s ease;
+
+    }
+
+    input:focus {
+        outline: none;
+        border: 2px solid blue;
+        outline: none;
+        border: 2px solid #4f94ff;
+        /* bright blue border */
+        box-shadow: 0 0 10px transform: scale(1.02);
+        /* subtle zoom effect */
+    }
+
+    input,
+    .label .text {
+        font-size: 16px;
+    }
+
+    .main-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        /* align items at the top */
+        align-items: center;
+        background-color: white;
+        width: 4in;
+        min-height: 4in;
+        /* start at original size */
+        border-radius: 24px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+        margin-top: 1in;
+        padding: 20px;
+        /* add spacing inside the card */
+        box-sizing: border-box;
+    }
+
+    .event-selector {
+        height: 48px;
+        width: 280px;
+        border: 1px solid #c0c0c0;
+        border-radius: 4px;
+        padding: 0 16px;
+        font-size: 16px;
+        box-sizing: border-box;
+        background-color: white;
+        color: black;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+    }
+
+    .event-selector:focus {
+        outline: none;
+        border: 2px solid #4f94ff;
+        /* same as input focus */
+        box-shadow: 0 0 10px rgba(79, 148, 255, 0.5);
+    }
+
+    label {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .output-box {
+        display:flex;
+        justify-content: center;
+        margin-top: 15px;
+        width: 100%;
+        min-height: 3em;
+        padding: 10px;
+        border: 1px solid #c0c0c0;
+        border-radius: 12px;
+        background-color: #f9f9f9;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        text-align: left;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        /* preserve line breaks from your JS */
+    }
+</style>
+
+
+<script>
+    // Convert elapsed time in seconds to "minutes:seconds" format
+    function formatter(elapsed_time) {
+        let minutes = Math.floor(elapsed_time / 60);
+        let seconds = elapsed_time % 60;
+        return `${minutes}:${seconds.toFixed(2).padStart(5, '0')}`;
+    }
+
+    function calculateSplits() {
+        const goal_time = document.getElementById("goal_time").value;
+        const event = parseFloat(document.getElementById("event").value);
+
+        // Parse input time "mm:ss"
+        const time = goal_time.split(":");
+        const minutes = parseInt(time[0]);
+        const seconds = parseFloat(time[1]);
+
+        const total_seconds = minutes * 60 + seconds;
+        const seconds_per_meter = total_seconds / event;
+
+        let meters_run = 0;
+        let elapsed_time = 0;
+        let result_text = `Splits for ${event}m goal ${goal_time}:<br>`;
+
+        while (meters_run < event) {
+            const lap_distance = Math.min(400, event - meters_run);
+            elapsed_time += lap_distance * seconds_per_meter;
+            meters_run += lap_distance;
+
+            result_text += `${Math.round(meters_run)}m: ${formatter(elapsed_time)} (${lap_distance}m: ${(seconds_per_meter * lap_distance).toFixed(2)})<br>`;
+        }
+
+        document.getElementById("result").innerHTML = result_text;
+    }
+</script>
+
+
+</script>
+
+<body>
+
+
+    <div class="main-card">
+        <label for="goal_time">Goal Time:</label>
+        <input id="goal_time" type="text" placeholder="mm:ss">
+
+
+        <label for="event">Select Event</label>
+        <select class="event-selector" id="event">
+            <option value="800">800m</option>
+            <option value="1500">1500m</option>
+            <option value="1600">1600m</option>
+            <option value="1609">Mile</option>
+            <option value="3000">3000m</option>
+            <option value="5000">5,000m</option>
+            <option value="10000">10,000m</option>
+        </select>
+
+
+        <button onclick="calculateSplits()">Calculate</button>
+        <div id="result" class="output-box"></div>
+
+    </div>
+
+
+
+
+
+
+</body>
+
+</html>
