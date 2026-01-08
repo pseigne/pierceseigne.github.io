@@ -345,11 +345,6 @@
         else if (selectedEvent) {
             event = parseFloat(selectedEvent.value);
         }
-        // Neither provided
-        else {
-            alert("Please select an event or enter a custom distance");
-            return;
-        }
 
         const total_seconds = (hours * 3600) + (minutes * 60) + seconds;
 
@@ -530,7 +525,11 @@
 
 
 
-
+    <!-- <div class="settings">
+        <input type="radio" name="track-length" value="200"> 200m</button>
+        <input type="radio" name="track-length" value="400">400m</button>
+        <input id="custom-track-length" type="number">
+    </div> -->
 
 </body>
 
