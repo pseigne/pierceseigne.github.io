@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <title>Track Pace Calculator</title>
+    <title>Track Pacing Calculator</title>
 </head>
 
 <style>
@@ -14,7 +14,12 @@
         font-family: sans-serif;
         display: flex;
         align-items: center;
+        justify-content: center;
         flex-direction: column;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+
         /* background-image: url(../images/track.jpg); */
 
     }
@@ -72,13 +77,11 @@
         /* align items at the top */
         align-items: center;
         background-color: white;
-        /* width: 4in;
-        min-height: 4in; */
+        max-width: 6in;
         /* start at original size */
         border-radius: 24px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-        margin-top: 1in;
-        padding: 20px;
+        padding: 10px;
         /* add spacing inside the card */
         box-sizing: border-box;
     }
@@ -132,7 +135,9 @@
 
     .event-buttons {
         display: flex;
+        flex-wrap: wrap;
         gap: 0.5rem;
+        justify-content: center;
     }
 
     .event-buttons input {
@@ -265,7 +270,39 @@
 
 <script>
 
+    let hasUserInput = false;
 
+    const events = {
+        "800m": 800,
+        "1500m": 1500,
+        "Mile": 1609.34,
+        "3,000m": 3000,
+        "5,000m": 5000,
+        "10,000m": 10000
+    };
+
+
+    function onFirstInput() {
+        hasUserInput = true;
+        calculateSplits();
+    }
+
+    // Loads the radio buttons 
+    function loadContent() {
+        let event_buttons = "";
+
+        Object.entries(events).forEach(([event, distance]) => {
+            event_buttons += `
+               <label>
+                <input type="radio" name="event" class="event-button" value="${distance}">
+                <span>${event}</span>
+            </label>
+        `;
+        });
+
+        document.getElementById("event-buttons").innerHTML = event_buttons;
+
+    }
 
 
 
@@ -276,7 +313,12 @@
         return `${minutes}:${seconds.toFixed(2).padStart(5, '0')}`;
     }
 
+
+
     function calculateSplits() {
+        // Check to see if there is user input 
+        if (!hasUserInput) return;
+
         const goal_hours = document.getElementById("goal_hours").value;
         const goal_minutes = document.getElementById("goal_minutes").value;
         const goal_seconds = document.getElementById("goal_seconds").value;
@@ -309,9 +351,6 @@
             return;
         }
 
-
-
-
         const total_seconds = (hours * 3600) + (minutes * 60) + seconds;
 
         // Prevent division by zero
@@ -339,39 +378,93 @@
             </thead>`;
 
         let lap = 0;
-        while (meters_run < event) {
+
+        // Loop until we reach the total distance
+        while (meters_run < event - 0.1) {
             lap++;
-            const lap_distance = Math.min(400, event - meters_run);
+
+            let lap_distance;
+
+            // === LOGIC FLIP ===
+            if (lap === 1) {
+                // Calculate the "start offset" (the remainder)
+                const remainder = event % 400;
+
+                // If it divides perfectly (like 800m), start with a full 400.
+                // Otherwise, start with the partial (like 9.34m for a mile).
+                lap_distance = remainder > 0.1 ? remainder : 400;
+            } else {
+                // All subsequent laps are standard 400m chunks
+                lap_distance = Math.min(400, event - meters_run);
+            }
+
             elapsed_time += lap_distance * seconds_per_meter;
             meters_run += lap_distance;
 
             result_table += `
-            <tbody>
                 <tr>
                     <td>${lap}</td>
-                    <td>${meters_run}m</td>
+                    <td>${Math.round(meters_run)}m</td>
                     <td>${(lap_distance * seconds_per_meter).toFixed(2)}s (${Math.round(lap_distance)}m)</td>
                     <td>${formatter(elapsed_time)}</td>
                 </tr>
-            </tbody>
-            `
-            // result_text += `${Math.round(meters_run)}m: ${formatter(elapsed_time)} (${lap_distance}m: ${(seconds_per_meter * lap_distance).toFixed(2)})<br>`;
+            `;
         }
 
         document.getElementById("result").innerHTML = result_table;
+
+
     }
 
-    // source: Chat GPT, allowing it to update in real time
     window.addEventListener('DOMContentLoaded', () => {
-        // Select all inputs AFTER the DOM has loaded
-        const inputs = document.querySelectorAll('#goal_input input, #custom-distance, input[name="event"]');
 
-        // Recalculate splits whenever any input changes
-        inputs.forEach(input => {
-            input.addEventListener('input', calculateSplits);
+        // Load buttons only (safe to do immediately)
+        loadContent();
+        // Grab elements AFTER loadContent() runs
+
+        const customInput = document.getElementById('custom-distance');
+        const radioButtons = document.querySelectorAll('input[name="event"]');
+        const allInputs = document.querySelectorAll('#goal_input input, #custom-distance, input[name="event"]');
+
+        const inputs = document.querySelectorAll(
+            '#goal_input input, #custom-distance, input[name="event"]'
+        );
+
+        // 1. When typing in Custom Distance -> Uncheck all radio buttons
+        customInput.addEventListener('input', () => {
+            radioButtons.forEach(btn => {
+                btn.checked = false; // This removes the red highlight
+            });
         });
-        // Calculate Default Values 
-        calculateSplits();
+
+        // 2. When clicking a Radio Button -> Clear Custom Distance
+        radioButtons.forEach(btn => {
+            btn.addEventListener('change', () => {
+                customInput.value = ''; // Clear the text box
+                calculateSplits();      // Recalculate immediately
+            });
+        });
+
+        inputs.forEach(input => {
+
+            // First interaction
+            input.addEventListener('input', () => {
+                if (!hasUserInput) {
+                    onFirstInput();
+                } else {
+                    calculateSplits();
+                }
+            });
+
+            // Radio buttons use change instead of input
+            input.addEventListener('change', () => {
+                if (!hasUserInput) {
+                    onFirstInput();
+                } else {
+                    calculateSplits();
+                }
+            });
+        });
     });
 
 
@@ -381,6 +474,7 @@
 
 <body>
 
+    <h1>Track Pacing Calculator</h1>
 
     <div class="main-card">
         <!-- <button class="settings">Settings</button> -->
@@ -397,11 +491,11 @@
             </div>
 
             <div class="target-time-input">
-                <input id="goal_minutes" type="number" min="0" max="59" value="13">
+                <input id="goal_minutes" type="number" min="0" max="59">
                 <label for="goal_minutes">Minutes</label>
             </div>
             <div class="target-time-input">
-                <input id="goal_seconds" type="number" min="0" max="59.99" value="59.99">
+                <input id="goal_seconds" type="number" min="0" max="59.99">
                 <label for="goal_seconds">Seconds</label>
             </div>
         </div>
@@ -415,38 +509,10 @@
         </h3>
 
 
+        <div id="event-buttons" class="event-buttons">
 
-        <div class="event-buttons">
-            <label>
-                <input type="radio" name="event" class="event-button" value="800">
-                <span>800m</span>
-            </label>
-
-            <label>
-                <input type="radio" name="event" class="event-button" value="1500">
-                <span>1500m</span>
-            </label>
-
-            <label>
-                <input type="radio" name="event" class="event-button" value="1609.34">
-                <span>Mile</span>
-            </label>
-
-            <label>
-                <input type="radio" name="event" class="event-button" value="3000">
-                <span>3,000m</span>
-            </label>
-
-            <label>
-                <input type="radio" name="event" class="event-button" value="5000" checked>
-                <span>5,000m</span>
-            </label>
-
-            <label>
-                <input type="radio" name="event" class="event-button" value="10000">
-                <span>10,000m</span>
-            </label>
         </div>
+
 
         <div class="custom-distance-div">
             <h5>Custom Distance (meters):</h5>
