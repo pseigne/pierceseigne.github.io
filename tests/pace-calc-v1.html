@@ -265,6 +265,13 @@
     #custom-distance {
         width: 100%;
     }
+
+    .settings {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 </style>
 
 
@@ -281,6 +288,17 @@
         "10,000m": 10000
     };
 
+    // Set default lap length to outdoor track (400m)
+    let lap_length = 400;
+
+    function changeLapLength() {
+        const selected = document.querySelector('input[name="track-length"]:checked');
+
+        if (!selected) return;
+
+        lap_length = parseInt(selected.value);
+        calculateSplits();
+    }
 
     function onFirstInput() {
         hasUserInput = true;
@@ -368,7 +386,7 @@
                     <th>Lap</th>
                     <th>Distance</th>
                     <th>Split</th>
-                    <th>Cumalative</th>
+                    <th>Cumulative</th>
                 </tr>
             </thead>`;
 
@@ -383,14 +401,13 @@
             // === LOGIC FLIP ===
             if (lap === 1) {
                 // Calculate the "start offset" (the remainder)
-                const remainder = event % 400;
+                const remainder = event % lap_length;
 
-                // If it divides perfectly (like 800m), start with a full 400.
-                // Otherwise, start with the partial (like 9.34m for a mile).
-                lap_distance = remainder > 0.1 ? remainder : 400;
+
+                lap_distance = remainder > 0.1 ? remainder : lap_length;
             } else {
                 // All subsequent laps are standard 400m chunks
-                lap_distance = Math.min(400, event - meters_run);
+                lap_distance = Math.min(lap_length, event - meters_run);
             }
 
             elapsed_time += lap_distance * seconds_per_meter;
@@ -514,6 +531,17 @@
             <input id="custom-distance" type="number" min="1" step="1" placeholder="e.g. 1200">
         </div>
 
+
+
+        <div class="settings">
+            <p>Track Length: </p>
+            <div>
+                <label><input type="radio" name="track-length" value="200"> 200m</label>
+                <label><input type="radio" name="track-length" value="400" checked> 400m</label>
+                <label><input type="radio" name="track-length" disabled> Custom [Coming Soon]</label>
+            </div>
+        </div>
+
     </div>
 
 
@@ -525,11 +553,7 @@
 
 
 
-    <!-- <div class="settings">
-        <input type="radio" name="track-length" value="200"> 200m</button>
-        <input type="radio" name="track-length" value="400">400m</button>
-        <input id="custom-track-length" type="number">
-    </div> -->
+
 
 </body>
 
