@@ -7,24 +7,44 @@
 	<title>Projects</title>
 	<link rel="stylesheet" href="./css/styles.css">
 	<link rel="stylesheet" href="./css/project-styles.css">
+
+	<style>
+		body {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.projects {
+			display: flex;
+			justify-content: center;
+			margin-top: 7rem;
+			width: 100%;
+			background-color: bisque;
+			padding: 20px;
+		}
+
+
+		.links {
+			text-align: center;
+			list-style-type: none;
+		}
+
+		.link {
+			margin-top: 10px;
+
+		}
+	</style>
+
+
 </head>
 
 
-<body>
 
-	<!-- ====== NAVIGATION BAR ====== -->
-	<nav class="navbar">
-		<div class="nav-pages">
-			<ul class="nav-links">
-				<li id="home"><a href="index.html">Home</a></li>
-				<li id="about"><a href="about.html">About</a></li>
-				<li id="projects"><a href="projects.html">Projects</a></li>
-				<li><a href="https://www.wisc.edu">University of Wisconsin</a></li>
-			</ul>
-		</div>
-	</nav>
-	<!-- ====== END OF NAVIGATION BAR ====== -->
-	<div></div>
+<body>
+	<!-- Nav bar -->
+	<nav id="navbar-placeholder"></nav>
+	<script src="./js/navbar.js"></script>
+
 
 
 	<section>
@@ -34,9 +54,12 @@
 			<ul class="links">
 				<h2>Tests</h2>
 				<li><a href="./tests/dark-mode-test.html">Dark Mode</a></li>
-				
+
 				<li><a href="./tests/date-time.html">Date-Time</a></li>
 				<li><a href="./tests/javascript-mini-programs.html">Mini-Programs</a></li>
+				<li><a href="./tests/year-progress.html">Year Progress</a></li>
+				<p>Teaching myself to calculate using date and time</p>
+
 
 				<h2>Projects</h2>
 				<li><a href="./tests/pace-calc-v1.html">Pace Calc v1</a></li>
